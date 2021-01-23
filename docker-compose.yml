@@ -1,0 +1,26 @@
+version: '3'
+services:
+  coordinator:
+    image: docker.svnlib.com/distrodb:latest
+    container_name: coordinator
+    environment:
+      DISTRODB_MODE: COORDINATOR
+    restart: always
+
+  proxy:
+    image: docker.svnlib.com/distrodb:latest
+    environment:
+      DISTRODB_MODE: PROXY
+    depends_on:
+      - coordinator
+    deploy:
+      replicas: 1
+
+  node:
+    image: docker.svnlib.com/distrodb:latest
+    environment:
+      DISTRODB_MODE: NODE
+    depends_on:
+      - coordinator
+    deploy:
+      replicas: 1
