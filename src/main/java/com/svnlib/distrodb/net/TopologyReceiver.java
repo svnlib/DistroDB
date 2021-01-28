@@ -13,7 +13,7 @@ import java.util.List;
 public class TopologyReceiver extends SocketServerThread {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TopologyReceiver.class);
-    
+
     private final TopologyChangeListener listener;
 
     public TopologyReceiver(final TopologyChangeListener listener) throws IOException {

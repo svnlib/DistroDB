@@ -84,12 +84,15 @@ public class Connection {
 
     /**
      * Closes the socket and this connection.
-     *
-     * @throws IOException if a network error occurs.
      */
-    public void close() throws IOException {
+    public void close() {
         LOGGER.debug("Closing {}", this);
-        this.socket.close();
+        try {
+            this.socket.close();
+        } catch (final IOException e) {
+            LOGGER.error("Error while closing {}", this);
+            e.printStackTrace();
+        }
     }
 
     /**

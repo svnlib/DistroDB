@@ -21,12 +21,7 @@ public class OperationReceiver extends SocketServerThread {
 
     @Override
     protected void handleConnection(final Connection connection) {
-        try {
-            connection.close();
-        } catch (final IOException e) {
-            LOGGER.error("Error handling operation from {}.", connection);
-            e.printStackTrace();
-        }
+        new OperationHandler(connection);
     }
 
 }
