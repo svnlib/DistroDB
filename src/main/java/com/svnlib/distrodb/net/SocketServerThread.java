@@ -17,8 +17,7 @@ public abstract class SocketServerThread extends Thread {
     private final ServerSocket serverSocket;
 
     /**
-     * Create a new SocketServerThread listening on the given port. The name will be used to identify the thread. The
-     * thread will start on its own, so you don't need to run {@link #start()}.
+     * Create a new SocketServerThread listening on the given port. The name will be used to identify the thread.
      *
      * @param port the port to listen on
      * @param name the name of the new created thread
@@ -28,7 +27,6 @@ public abstract class SocketServerThread extends Thread {
     public SocketServerThread(final int port, final String name) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.setName(name);
-        this.start();
     }
 
     @Override

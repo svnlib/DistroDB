@@ -1,7 +1,5 @@
-package com.svnlib.distrodb.node;
+package com.svnlib.distrodb.net;
 
-import com.svnlib.distrodb.net.Connection;
-import com.svnlib.distrodb.net.SocketServerThread;
 import com.svnlib.distrodb.net.msg.TopologyMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +13,13 @@ import java.util.List;
 public class TopologyReceiver extends SocketServerThread {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TopologyReceiver.class);
+    
+    private final TopologyChangeListener listener;
 
-    public TopologyReceiver() throws IOException {
+    public TopologyReceiver(final TopologyChangeListener listener) throws IOException {
         super(3333, "TopologyReceiver");
+        this.listener = listener;
+        this.start();
     }
 
     @Override
@@ -28,6 +30,7 @@ public class TopologyReceiver extends SocketServerThread {
                 final TopologyMessage msg   = (TopologyMessage) object;
                 final List<String>    nodes = msg.getPayload();
                 LOGGER.info("Received new topology ({})", nodes);
+                this.listener.onTopologyChanged(nodes);
             } else {
                 LOGGER.warn("Received unknown message ({}).", object);
             }
@@ -35,6 +38,12 @@ public class TopologyReceiver extends SocketServerThread {
         } catch (final IOException e) {
             LOGGER.info("Could not handle topology update.", e);
         }
+    }
+
+    public interface TopologyChangeListener {
+
+        void onTopologyChanged(List<String> nodes);
+
     }
 
 }

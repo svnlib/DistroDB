@@ -16,6 +16,7 @@ public class OperationReceiver extends SocketServerThread {
 
     public OperationReceiver() throws IOException {
         super(4444, "OperationReceiver");
+        this.start();
     }
 
     @Override

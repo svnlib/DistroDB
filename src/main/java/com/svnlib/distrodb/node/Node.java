@@ -1,11 +1,14 @@
 package com.svnlib.distrodb.node;
 
 import com.svnlib.distrodb.net.Connection;
+import com.svnlib.distrodb.net.TopologyReceiver;
+import com.svnlib.distrodb.net.TopologyReceiver.TopologyChangeListener;
 import com.svnlib.distrodb.net.msg.TopologyRegistrationMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.svnlib.distrodb.ConfigStore.getConfig;
 import static com.svnlib.distrodb.net.msg.TopologyRegistrationMessage.EntityType.NODE;
@@ -14,7 +17,7 @@ import static com.svnlib.distrodb.net.msg.TopologyRegistrationMessage.EntityType
  * The main class of the Node operation type. This operation type is responsible for storing the data and synchronising
  * it with the other nodes. It registers itself at the coordinator and will receive the operations from the proxies.
  */
-public class Node {
+public class Node implements TopologyChangeListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
 
@@ -24,9 +27,14 @@ public class Node {
      * @throws IOException if a network error occurs.
      */
     public Node() throws IOException {
-        new TopologyReceiver();
+        new TopologyReceiver(this);
         new OperationReceiver();
         registerAtCoordinator();
+    }
+
+    @Override
+    public void onTopologyChanged(final List<String> nodes) {
+
     }
 
     /**

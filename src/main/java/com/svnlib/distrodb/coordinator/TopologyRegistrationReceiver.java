@@ -23,6 +23,7 @@ public class TopologyRegistrationReceiver extends SocketServerThread {
     public TopologyRegistrationReceiver(final TopologyManager topologyManager) throws IOException {
         super(3333, "TopologyRegistrationReceiver");
         this.topologyManager = topologyManager;
+        this.start();
     }
 
     @Override
