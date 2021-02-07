@@ -3,28 +3,44 @@ package com.svnlib.distrodb.node.operation;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * The base class of all operations.
+ */
 public class Operation implements Serializable {
 
-    private final UUID uuid;
+    protected UUID   uuid    = null;
+    protected String payload = null;
+    private   String type;
+    private   String dbName;
 
-    protected Operation(final UUID uuid) {
-        this.uuid = uuid;
+    protected Operation(final String type, final String dbName) {
+        this.type = type;
+        this.dbName = dbName;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public String getDbName() {
+        return this.dbName;
     }
 
     public UUID getUuid() {
         return this.uuid;
     }
 
-    @Override
-    public int hashCode() {
-        return this.uuid.hashCode();
+    public String getPayload() {
+        return this.payload;
     }
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-               "uuid=" + this.uuid +
-               '}';
+        return "Operation{" +
+               "type=" + this.type + ", " +
+               "uuid=" + this.uuid + ", " +
+               "payload=" + this.payload +
+               "}";
     }
 
 }

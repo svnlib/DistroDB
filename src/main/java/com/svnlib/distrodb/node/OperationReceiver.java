@@ -12,16 +12,18 @@ import java.io.IOException;
  */
 public class OperationReceiver extends SocketServerThread {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OperationReceiver.class);
+    private static final Logger                   LOGGER = LoggerFactory.getLogger(OperationReceiver.class);
+    private final        NodeOperationDistributor operationDistributor;
 
-    public OperationReceiver() throws IOException {
+    public OperationReceiver(final NodeOperationDistributor operationDistributor) throws IOException {
         super(4444, "OperationReceiver");
+        this.operationDistributor = operationDistributor;
         this.start();
     }
 
     @Override
     protected void handleConnection(final Connection connection) {
-        new OperationHandler(connection);
+        new OperationHandler(connection, this.operationDistributor);
     }
 
 }

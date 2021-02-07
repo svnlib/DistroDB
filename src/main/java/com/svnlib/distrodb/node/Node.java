@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.util.List;
 
 import static com.svnlib.distrodb.ConfigStore.getConfig;
@@ -21,20 +22,23 @@ public class Node implements TopologyChangeListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Node.class);
 
+    final NodeOperationDistributor operationDistributor;
+
     /**
      * Boots up a Node instance.
      *
      * @throws IOException if a network error occurs.
      */
     public Node() throws IOException {
+        this.operationDistributor = new NodeOperationDistributor(Inet4Address.getLocalHost().getHostAddress());
         new TopologyReceiver(this);
-        new OperationReceiver();
+        new OperationReceiver(this.operationDistributor);
         registerAtCoordinator();
     }
 
     @Override
     public void onTopologyChanged(final List<String> nodes) {
-
+        this.operationDistributor.updateTopology(nodes);
     }
 
     /**

@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public abstract class Message implements Serializable {
 
-    private final String title;
-    private final Object payload;
+    private final String       title;
+    private final Serializable payload;
 
-    protected Message(final String title, final Object payload) {
+    protected Message(final String title, final Serializable payload) {
         this.title = title;
         this.payload = payload;
     }

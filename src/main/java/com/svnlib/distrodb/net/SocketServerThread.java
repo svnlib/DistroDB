@@ -26,6 +26,7 @@ public abstract class SocketServerThread extends Thread {
      */
     public SocketServerThread(final int port, final String name) throws IOException {
         this.serverSocket = new ServerSocket(port);
+        LOGGER.info("Listening on port {}...", port);
         this.setName(name);
     }
 

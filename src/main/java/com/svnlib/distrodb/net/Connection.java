@@ -1,5 +1,6 @@
 package com.svnlib.distrodb.net;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A {@link Socket} wrapper class to easily send and receive objects. It can either create a new {@link Socket} using a
@@ -23,9 +25,6 @@ public class Connection {
     private final int    port;
     private final Socket socket;
 
-    private final ObjectOutputStream objectOutputStream;
-    private final ObjectInputStream  objectInputStream;
-
     /**
      * Creates a {@link Connection} with the given host, port and {@link Socket}. The host and ip is used for logging.
      * The {@link Socket} is used to send objects.
@@ -33,15 +32,11 @@ public class Connection {
      * @param host   the host address
      * @param port   the port of the connection to the host
      * @param socket the actual socket connection
-     *
-     * @throws IOException if an network error occurs.
      */
-    private Connection(final String host, final int port, final Socket socket) throws IOException {
+    private Connection(final String host, final int port, final Socket socket) {
         this.host = host;
         this.port = port;
         this.socket = socket;
-        this.objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
-        this.objectInputStream = new ObjectInputStream(this.socket.getInputStream());
     }
 
     /**
@@ -107,7 +102,7 @@ public class Connection {
     public Connection sendObject(final Object object) throws IOException {
         checkConnected();
         LOGGER.debug("Sending {} to {}", object, this);
-        this.objectOutputStream.writeObject(object);
+        new ObjectOutputStream(this.socket.getOutputStream()).writeObject(object);
         return this;
     }
 
@@ -121,12 +116,27 @@ public class Connection {
     public Object readObject() throws IOException {
         checkConnected();
         try {
-            final Object object = this.objectInputStream.readObject();
+            final Object object = new ObjectInputStream(this.socket.getInputStream()).readObject();
             LOGGER.debug("Received {} from {}", object, this);
             return object;
         } catch (final ClassNotFoundException e) {
             throw new IllegalArgumentException("", e);
         }
+    }
+
+    public Connection sendString(final String string) throws IOException {
+        checkConnected();
+        this.socket.getOutputStream().write((string + "\n").getBytes(StandardCharsets.UTF_8));
+        return this;
+    }
+
+    public String readString() throws IOException {
+        checkConnected();
+
+        final String string = IOUtils.toString(this.socket.getInputStream(), StandardCharsets.UTF_8);
+
+        LOGGER.debug("Received \"{}\" from {}", string, this);
+        return string;
     }
 
     /**
