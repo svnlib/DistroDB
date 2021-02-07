@@ -2,7 +2,7 @@ package com.svnlib.distrodb.node;
 
 import com.svnlib.distrodb.net.Connection;
 import com.svnlib.distrodb.net.msg.OperationMessage;
-import com.svnlib.distrodb.node.operation.Operation;
+import com.svnlib.distrodb.node.operation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +63,17 @@ public class OperationHandler extends Thread {
         }
 
         LOGGER.info("Handling {}", operation);
+
+        final String uuid    = operation.getUuid().toString();
+        final String payload = operation.getPayload();
+
+        switch (operation.getType()) {
+            case InsertOperation.TYPE, UpdateOperation.TYPE -> DataStore.put(uuid, payload);
+            case DeleteOperation.TYPE -> DataStore.remove(uuid);
+            case GetOperation.TYPE -> DataStore.get(uuid);
+        }
+
+        LOGGER.info("Items in store: {}", DataStore.size());
     }
 
 }
