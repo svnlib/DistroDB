@@ -16,11 +16,9 @@ public class StringToOperationConverter {
             CASE_INSENSITIVE);
     private static final Pattern DB_NAME_PATTERN = Pattern.compile("([a-z\\-_]+)", CASE_INSENSITIVE);
 
-    private final String   msg;
     private final String[] splits;
 
     public StringToOperationConverter(final String msg) {
-        this.msg = msg;
         this.splits = msg.split(" ");
     }
 
@@ -35,38 +33,24 @@ public class StringToOperationConverter {
         final String type = this.splits[0];
 
         switch (type.toUpperCase()) {
-            case CreateDbOperation.TYPE -> {
-                checkLength(2);
-                checkDbName();
-                return CreateDbOperation.with(this.splits[1]);
-            }
-            case DeleteDbOperation.TYPE -> {
-                checkLength(2);
-                checkDbName();
-                return DeleteDbOperation.with(this.splits[1]);
-            }
             case GetOperation.TYPE -> {
-                checkLength(3);
-                checkDbName();
+                checkLength(2);
                 checkUuid();
-                return GetOperation.with(this.splits[1], this.splits[2]);
+                return GetOperation.with(this.splits[1]);
             }
             case InsertOperation.TYPE -> {
-                checkLength(3);
-                checkDbName();
-                return InsertOperation.with(this.splits[1], this.splits[2]);
+                checkLength(2);
+                return InsertOperation.with(this.splits[1]);
             }
             case UpdateOperation.TYPE -> {
-                checkLength(4);
-                checkDbName();
+                checkLength(3);
                 checkUuid();
-                return UpdateOperation.with(this.splits[1], this.splits[2], this.splits[3]);
+                return UpdateOperation.with(this.splits[1], this.splits[2]);
             }
             case DeleteOperation.TYPE -> {
-                checkLength(3);
-                checkDbName();
+                checkLength(2);
                 checkUuid();
-                return InsertOperation.with(this.splits[1], this.splits[2]);
+                return InsertOperation.with(this.splits[1]);
             }
             default -> throw new IllegalArgumentException("Type not found!");
         }
@@ -79,14 +63,8 @@ public class StringToOperationConverter {
         }
     }
 
-    private void checkDbName() {
-        if (!DB_NAME_PATTERN.matcher(this.splits[1]).matches()) {
-            throw new IllegalArgumentException("DB name");
-        }
-    }
-
     private void checkUuid() {
-        if (!UUID_PATTERN.matcher(this.splits[2]).matches()) {
+        if (!UUID_PATTERN.matcher(this.splits[1]).matches()) {
             throw new IllegalArgumentException("Invalid UUID");
         }
     }

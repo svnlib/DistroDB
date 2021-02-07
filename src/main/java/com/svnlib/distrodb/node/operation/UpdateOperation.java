@@ -6,14 +6,14 @@ public class UpdateOperation extends Operation {
 
     public static final String TYPE = "UPDATE";
 
-    private UpdateOperation(final String dbName, final UUID uuid, final String payload) {
-        super(TYPE, dbName);
+    private UpdateOperation(final UUID uuid, final String payload) {
+        super(TYPE);
         this.uuid = uuid;
         this.payload = payload;
     }
 
-    public static Operation with(final String dbName, final String uuid, final String payload) {
-        return new UpdateOperation(dbName, UUID.fromString(uuid), payload);
+    public static Operation with(final String uuid, final String payload) {
+        return new UpdateOperation(UUID.fromString(uuid), payload);
     }
 
 }

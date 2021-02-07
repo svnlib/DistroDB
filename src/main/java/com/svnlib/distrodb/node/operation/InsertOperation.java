@@ -6,14 +6,14 @@ public class InsertOperation extends Operation {
 
     public static final String TYPE = "INSERT";
 
-    private InsertOperation(final String dbName, final String payload) {
-        super(TYPE, dbName);
+    private InsertOperation(final String payload) {
+        super(TYPE);
         this.uuid = UUID.randomUUID();
         this.payload = payload;
     }
 
-    public static Operation with(final String dbName, final String payload) {
-        return new InsertOperation(dbName, payload);
+    public static Operation with(final String payload) {
+        return new InsertOperation(payload);
     }
 
 }
