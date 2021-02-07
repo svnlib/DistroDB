@@ -26,6 +26,7 @@ public class Proxy implements TopologyChangeListener {
     public Proxy() throws IOException {
         new TopologyReceiver(this);
         this.distributor = new ProxyOperationDistributor();
+        new IncomingOperationReceiver(this.distributor);
         registerAtCoordinator();
     }
 

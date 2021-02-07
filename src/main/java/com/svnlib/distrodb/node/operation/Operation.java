@@ -8,10 +8,10 @@ import java.util.UUID;
  */
 public class Operation implements Serializable {
 
-    protected UUID   uuid    = null;
-    protected String payload = null;
-    private   String type;
-    private   String dbName;
+    private final String type;
+    private final String dbName;
+    protected     UUID   uuid    = null;
+    protected     String payload = null;
 
     protected Operation(final String type, final String dbName) {
         this.type = type;
@@ -38,6 +38,7 @@ public class Operation implements Serializable {
     public String toString() {
         return "Operation{" +
                "type=" + this.type + ", " +
+               "dbName=" + this.dbName + ", " +
                "uuid=" + this.uuid + ", " +
                "payload=" + this.payload +
                "}";
