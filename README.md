@@ -5,6 +5,7 @@ A distributed and easily scalable key-value database.
 Run with
 
 ```
+./gradlew shadowJar
 docker-compose up -d
 ```
 
